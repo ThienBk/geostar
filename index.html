@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Render Key Pro</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .container {
+      width: 650px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .buttons {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .render-btn { background: #22c55e; }
+    .copy-btn { background: #3b82f6; }
+    .clear-btn { background: #ef4444; }
+
+    .output {
+      margin-top: 20px;
+      padding: 12px;
+      background: #1e293b;
+      border-radius: 10px;
+      word-break: break-all;
+      min-height: 40px;
+    }
+
+    .stats {
+      margin-top: 10px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .box {
+      background: #1e293b;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Render Key + Tính tiền</h2>
+
+  <textarea id="inputData" placeholder="Dán dữ liệu từ Excel..."></textarea>
+
+  <div class="buttons">
+    <button class="render-btn" onclick="renderData()">Render</button>
+    <button class="copy-btn" onclick="copyResult()">Copy</button>
+    <button class="clear-btn" onclick="clearAll()">Clear</button>
+  </div>
+
+  <!-- THỐNG KÊ -->
+  <div class="stats">
+    <div class="box">Số lượng: <span id="count">0</span></div>
+    <div class="box">Tổng tiền: <span id="total">0$</span></div>
+  </div>
+
+  <div class="output" id="result"></div>
+</div>
+
+<script>
+function renderData() {
+  const input = document.getElementById("inputData").value;
+  let lines = input.split("\n");
+
+  let keys = [];
+  let total = 0;
+
+  lines.forEach(line => {
+    if (!line.trim()) return;
+
+    let parts = line.split(/\t|\s{2,}/);
+
+    let rawKey = parts[0] || "";
+    let rawPrice = parts[1] || "";
+
+    let cleanKey = rawKey.replace(/\s+/g, '').trim();
+
+    if (cleanKey) {
+      keys.push(cleanKey);
+
+      let priceMatch = rawPrice.match(/\d+/);
+      if (priceMatch) {
+        total += parseInt(priceMatch[0]);
+      }
+    }
+  });
+
+  let finalKeys = keys.join(",");
+  let result = `+ rys F2 ${finalKeys} US ${total}*`;
+
+  // cập nhật UI
+  document.getElementById("result").innerText = result;
+  document.getElementById("count").innerText = keys.length;
+  document.getElementById("total").innerText = total + "$";
+}
+
+function copyResult() {
+  const text = document.getElementById("result").innerText;
+
+  if (!text) {
+    alert("Chưa có dữ liệu!");
+    return;
+  }
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Đã copy!");
+  });
+}
+
+function clearAll() {
+  document.getElementById("inputData").value = "";
+  document.getElementById("result").innerText = "";
+  document.getElementById("count").innerText = "0";
+  document.getElementById("total").innerText = "0$";
+}
+</script>
+
+</body>
+</html>
