@@ -120,7 +120,7 @@ function renderData() {
   });
 
   let finalKeys = keys.join(",");
-  let result = `+ rys F2 ${finalKeys} US ${total}*`;
+  let result = `+rys F2 ${finalKeys} US ${total}*`;
 
   // cập nhật UI
   document.getElementById("result").innerText = result;
@@ -136,9 +136,11 @@ function copyResult() {
     return;
   }
 
+  /*
   navigator.clipboard.writeText(text).then(() => {
     alert("Đã copy!");
   });
+  */
 }
 
 function clearAll() {
